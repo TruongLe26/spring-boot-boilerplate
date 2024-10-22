@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: demo
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:6033/demo?allowPublicKeyRetrieval=true
+    username: user
+    password: password
+#    url: jdbc:mysql://${URL:localhost}:6033/demo?allowPublicKeyRetrieval=true
+#    username: ${USER:user}
+#    password: ${PASSWORD:password}
+#    url: jdbc:mysql://localhost:3306/demo
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    password:
+  #    driver-class-name: org.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+jwt:
+  signerKey: ""
+server:
+  port: 8081

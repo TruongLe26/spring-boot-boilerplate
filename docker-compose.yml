@@ -1,0 +1,33 @@
+services:
+  db:
+    image: mysql:8.2.0
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: demo
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "6033:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+        - pro-network
+  app:
+    container_name: app
+    image: new1
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - URL=${URL}
+      - USER=${USER}
+      - PASSWORD=${PASSWORD}
+    env_file:
+      - .env.dev
+volumes:
+  dbdata:
+networks:
+  pro-network:
+    driver: bridge
