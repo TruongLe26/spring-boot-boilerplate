@@ -1,6 +1,7 @@
 package com.truonglq.demo.filters;
 
 import com.truonglq.demo.services.jwt.JwtService;
+import com.truonglq.demo.services.user.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
         HandlerExceptionResolver handlerExceptionResolver;
         JwtService jwtService;
-        UserDetailsService userDetailsService;
+//        UserDetailsService userDetailsService;
+        UserService userService;
 //        BlacklistTokenService blacklistTokenService;
 
         @Override
@@ -48,12 +50,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                    filterChain.doFilter(request, response);
 //                    return;
 //                }
-                final String userEmail = jwtService.extractUsername(jwt);
+                final String username = jwtService.extractUsername(jwt);
 
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-                if (userEmail != null && authentication == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                if (username != null && authentication == null) {
+                    UserDetails userDetails = userService.loadUserByUsername(username);
                     if (jwtService.isTokenValid(jwt, userDetails)) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 userDetails,

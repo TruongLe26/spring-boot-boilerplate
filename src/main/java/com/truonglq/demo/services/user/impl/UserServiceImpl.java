@@ -7,6 +7,7 @@ import com.truonglq.demo.exceptions.AppException;
 import com.truonglq.demo.exceptions.ErrorCode;
 import com.truonglq.demo.mappers.UserMapper;
 import com.truonglq.demo.repositories.UserRepository;
+import com.truonglq.demo.services.authentication.AuthenticationService;
 import com.truonglq.demo.services.user.UserService;
 import com.truonglq.demo.services.user.UserSpecifications;
 import lombok.AccessLevel;
@@ -15,6 +16,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
+    AuthenticationService authenticationService;
 
     @Override
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -53,4 +59,25 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(UserSpecifications.usernameContains(username), pageable);
     }
 
+    @Override
+    public UserResponse getCurrentUser() {
+        User user = (User) authenticationService.getAuthentication().getPrincipal();
+        return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+//        if (user == null) {
+//            throw new UsernameNotFoundException("User not found");
+//        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                List.of()
+        );
+    }
 }

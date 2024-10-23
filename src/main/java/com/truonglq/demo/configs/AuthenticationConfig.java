@@ -3,6 +3,7 @@ package com.truonglq.demo.configs;
 import com.truonglq.demo.exceptions.AppException;
 import com.truonglq.demo.exceptions.ErrorCode;
 import com.truonglq.demo.repositories.UserRepository;
+import com.truonglq.demo.services.user.UserService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,11 +24,13 @@ public class AuthenticationConfig {
 
     PasswordEncoder passwordEncoder;
     UserRepository userRepository;
+    UserService userService;
 
-    UserDetailsService userDetailsService() {
-        return username -> (UserDetails) userRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
-    }
+//    @Bean
+//    UserDetailsService userDetailsService() {
+//        return username -> (UserDetails) userRepository.findByUsername(username)
+//                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+//    }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -37,7 +40,7 @@ public class AuthenticationConfig {
     @Bean
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }

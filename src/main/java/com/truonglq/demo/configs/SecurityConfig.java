@@ -2,6 +2,7 @@ package com.truonglq.demo.configs;
 
 import com.truonglq.demo.filters.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.crypto.spec.SecretKeySpec;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -39,18 +41,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
-                .authorizeHttpRequests(request ->
-                    request.requestMatchers(WHITELIST).permitAll()
-                            .anyRequest().permitAll())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(Customizer.withDefaults())
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider);
+        try {
+            httpSecurity
+                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .authenticationProvider(authenticationProvider)
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
+                    .authorizeHttpRequests(request ->
+                            request.requestMatchers(WHITELIST).authenticated()
+                                    .anyRequest().permitAll());
+//                .formLogin(Customizer.withDefaults());
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));
-        return httpSecurity.build();
+            return httpSecurity.build();
+        } catch (Exception e) {
+            log.error("Error occurred while configuring security filter chain: {}", e.getMessage());
+        }
+        return null;
     }
 
 //    @Bean

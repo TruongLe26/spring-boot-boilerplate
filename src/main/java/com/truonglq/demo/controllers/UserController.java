@@ -47,4 +47,11 @@ public class UserController {
         return apiResponse;
     }
 
+    @GetMapping("/me")
+    ApiResponse<UserResponse> getCurrentUser() {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.getCurrentUser())
+                .build();
+    }
+
 }

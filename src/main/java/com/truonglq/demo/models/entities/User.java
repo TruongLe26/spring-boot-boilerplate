@@ -26,9 +26,15 @@ public class User implements UserDetails {
     String password;
 //    @Enumerated(EnumType.STRING)
 //    UserRole userRole;
+    @Column(name = "status", columnDefinition = "tinyint(1) default 0")
+    Boolean status = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    public boolean isEnabled() {
+        return Boolean.TRUE.equals(status);
     }
 }

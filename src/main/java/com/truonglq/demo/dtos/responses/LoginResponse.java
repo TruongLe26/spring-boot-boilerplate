@@ -11,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
     String token;
-    @JsonProperty("expires_in")
-    long expiresIn;
+//    @JsonProperty("expires_in")
+//    long expiresIn;
 
-    @JsonProperty("token_type")
-    String tokenType = "Bearer";
+//    @JsonProperty("token_type")
+//    String tokenType = "Bearer";
 }

@@ -28,3 +28,6 @@ security:
     expiration-time: 86400000
 server:
   port: 8081
+logging:
+  level:
+    root: info

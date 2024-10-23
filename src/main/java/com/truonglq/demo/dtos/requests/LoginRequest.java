@@ -10,8 +10,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequest {
-//    @Size(max = 100, message = "INVALID_USERNAME")
+    @Size(max = 100, message = "INVALID_USERNAME")
     String username;
-//    @Size(min = 8, message = "INVALID_PASSWORD")
+    @Size(min = 8, message = "INVALID_PASSWORD")
     String password;
 }

@@ -9,9 +9,11 @@ import com.truonglq.demo.dtos.responses.IntrospectResponse;
 import com.truonglq.demo.dtos.requests.AuthenticationRequest;
 import com.truonglq.demo.dtos.responses.LoginResponse;
 import com.truonglq.demo.dtos.responses.UserResponse;
+import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 
 public interface AuthenticationService {
     LoginResponse authenticateAndGetToken(LoginRequest request);
+    Authentication getAuthentication();
 }

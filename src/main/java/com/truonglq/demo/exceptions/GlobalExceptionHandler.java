@@ -14,8 +14,8 @@ public class GlobalExceptionHandler {
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(ErrorCode.UNCATEGORIZED_EXCEPTION.getCode());
-        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
-
+//        apiResponse.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
+        apiResponse.setMessage(exception.getMessage());
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
@@ -30,21 +30,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
-//        String enumKey = exception.getFieldError().getDefaultMessage();
-//
-//        ErrorCode errorCode = ErrorCode.INVALID_KEY;
-//        try {
-//            errorCode = ErrorCode.valueOf(enumKey);
-//        } catch (IllegalArgumentException e) {
-//        }
-//
-//        ApiResponse apiResponse = new ApiResponse();
-//        apiResponse.setCode(errorCode.getCode());
-//        apiResponse.setMessage(errorCode.getMessage());
-//
-//        return ResponseEntity.badRequest().body(apiResponse);
-//    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        String enumKey = exception.getFieldError().getDefaultMessage();
+
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
+        try {
+            errorCode = ErrorCode.valueOf(enumKey);
+        } catch (IllegalArgumentException e) {
+        }
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(errorCode.getCode());
+        apiResponse.setMessage(errorCode.getMessage());
+
+        return ResponseEntity.badRequest().body(apiResponse);
+    }
 
 }
