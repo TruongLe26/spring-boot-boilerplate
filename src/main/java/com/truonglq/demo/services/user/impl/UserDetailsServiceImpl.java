@@ -1,7 +1,9 @@
 package com.truonglq.demo.services.user.impl;
 
-import com.truonglq.demo.models.User;
+import com.truonglq.demo.models.entities.User;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +12,13 @@ import com.truonglq.demo.repositories.UserRepository;
 
 import java.util.List;
 
+
+// Not using this class for now
+
 @Service
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements UserDetailsService {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     UserRepository userRepository;
 
@@ -25,7 +31,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getUsername(),
                 user.getPassword(),
                 List.of()
-
         );
     }
 }

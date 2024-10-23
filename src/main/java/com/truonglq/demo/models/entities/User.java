@@ -1,4 +1,4 @@
-package com.truonglq.demo.models;
+package com.truonglq.demo.models.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +24,8 @@ public class User implements UserDetails {
     String id;
     String username;
     String password;
+//    @Enumerated(EnumType.STRING)
+//    UserRole userRole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -2,7 +2,7 @@ package com.truonglq.demo.services.user.impl;
 
 import com.truonglq.demo.dtos.requests.UserRegistrationRequest;
 import com.truonglq.demo.dtos.responses.UserResponse;
-import com.truonglq.demo.models.User;
+import com.truonglq.demo.models.entities.User;
 import com.truonglq.demo.exceptions.AppException;
 import com.truonglq.demo.exceptions.ErrorCode;
 import com.truonglq.demo.mappers.UserMapper;

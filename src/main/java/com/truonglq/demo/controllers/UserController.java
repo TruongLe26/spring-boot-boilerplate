@@ -3,7 +3,7 @@ package com.truonglq.demo.controllers;
 import com.truonglq.demo.dtos.requests.UserRegistrationRequest;
 import com.truonglq.demo.dtos.responses.ApiResponse;
 import com.truonglq.demo.dtos.responses.UserResponse;
-import com.truonglq.demo.models.User;
+import com.truonglq.demo.models.entities.User;
 import com.truonglq.demo.services.user.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;

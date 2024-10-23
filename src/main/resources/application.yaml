@@ -22,7 +22,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
-jwt:
-  signerKey: ""
+security:
+  jwt:
+    signer-key: 
+    expiration-time: 86400000
 server:
   port: 8081

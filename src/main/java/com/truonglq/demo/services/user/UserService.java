@@ -2,7 +2,7 @@ package com.truonglq.demo.services.user;
 
 import com.truonglq.demo.dtos.requests.UserRegistrationRequest;
 import com.truonglq.demo.dtos.responses.UserResponse;
-import com.truonglq.demo.models.User;
+import com.truonglq.demo.models.entities.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

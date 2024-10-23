@@ -1,6 +1,6 @@
 package com.truonglq.demo.services.user;
 
-import com.truonglq.demo.models.User;
+import com.truonglq.demo.models.entities.User;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecifications {
