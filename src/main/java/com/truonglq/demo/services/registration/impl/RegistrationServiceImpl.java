@@ -35,7 +35,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         User user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .status(false)
+//                .status(false)
                 .build();
 
         // Send OTP

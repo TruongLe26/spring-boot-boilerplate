@@ -1,9 +1,12 @@
 package com.truonglq.demo.models.entities;
 
-import com.truonglq.demo.models.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.truonglq.demo.models.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -19,8 +22,14 @@ public class Role {
     String id;
 
     @Enumerated(EnumType.STRING)
-    UserRole name;
+    RoleEnum name;
 
-    @Column(name = "user_id")
-    String userId;
+//    @ManyToMany(targetEntity = User.class,
+//            mappedBy = "roles",
+//            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+//    @JsonBackReference
+//    Set<User> users;
+
+//    @Column(name = "user_id")
+//    String userId;
 }

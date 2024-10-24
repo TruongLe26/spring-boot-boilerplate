@@ -1,6 +1,7 @@
 package com.truonglq.demo.configs;
 
 import com.truonglq.demo.filters.JwtAuthenticationFilter;
+import com.truonglq.demo.services.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,10 +35,15 @@ public class SecurityConfig {
             "/auth/introspect"
     };
 
+    private final String[] ADMIN_ENDPOINTS = {
+            "/admin/**"
+    };
+
     @Value("${security.jwt.signer-key}")
     private String signerKey;
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -50,7 +56,9 @@ public class SecurityConfig {
                     .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
                     .authorizeHttpRequests(request ->
                             request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
-                                    .anyRequest().permitAll());
+                                    .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
+                                    .anyRequest().permitAll())
+                    .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 //                .formLogin(Customizer.withDefaults());
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));
             return httpSecurity.build();

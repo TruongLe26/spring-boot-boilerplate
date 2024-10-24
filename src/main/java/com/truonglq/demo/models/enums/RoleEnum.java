@@ -1,6 +1,6 @@
 package com.truonglq.demo.models.enums;
 
-public enum UserRole {
+public enum RoleEnum {
     USER,
     ADMIN
 }

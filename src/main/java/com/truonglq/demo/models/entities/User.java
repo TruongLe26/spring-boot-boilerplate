@@ -1,13 +1,17 @@
 package com.truonglq.demo.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -24,14 +28,26 @@ public class User implements UserDetails {
     String id;
     String username;
     String password;
-//    @Enumerated(EnumType.STRING)
-//    UserRole userRole;
-    @Column(name = "status", columnDefinition = "tinyint(1) default 1")
-    Boolean status = true;
+
+    @ManyToMany(targetEntity = Role.class,
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH,  CascadeType.REFRESH})
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonManagedReference
+    Set<Role> roles;
+
+//    @Column(name = "status", columnDefinition = "tinyint(1) default 1")
+//    Boolean status = true;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toString()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -44,7 +60,7 @@ public class User implements UserDetails {
         return password;
     }
 
-    public boolean isEnabled() {
-        return Boolean.TRUE.equals(status);
-    }
+//    public boolean isEnabled() {
+//        return Boolean.TRUE.equals(status);
+//    }
 }

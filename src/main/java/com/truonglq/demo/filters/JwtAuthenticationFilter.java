@@ -1,5 +1,6 @@
 package com.truonglq.demo.filters;
 
+import com.truonglq.demo.services.JwtAuthenticationEntryPoint;
 import com.truonglq.demo.services.jwt.JwtService;
 import com.truonglq.demo.services.user.UserService;
 import jakarta.servlet.FilterChain;
@@ -30,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         JwtService jwtService;
 //        UserDetailsService userDetailsService;
         UserService userService;
+        JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 //        BlacklistTokenService blacklistTokenService;
 
         @Override
@@ -68,7 +70,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
                 filterChain.doFilter(request, response);
             } catch (Exception exception) {
-                handlerExceptionResolver.resolveException(request, response, null, exception);
+//                handlerExceptionResolver.resolveException(request, response, null, exception);
+                jwtAuthenticationEntryPoint.commence(request, response, null);
             }
         }
 }
