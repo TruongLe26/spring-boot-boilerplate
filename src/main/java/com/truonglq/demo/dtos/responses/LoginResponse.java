@@ -11,6 +11,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
     String token;
+    @JsonProperty("refresh_token")
+    String refreshToken;
 //    @JsonProperty("expires_in")
 //    long expiresIn;
 

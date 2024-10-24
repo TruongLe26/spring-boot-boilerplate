@@ -19,7 +19,8 @@ spring:
 security:
   jwt:
     signer-key: ${SECRET_KEY}
-    expiration-time: 86400000
+    expiration-time: 900              # 15 minutes
+    refresh-expiration-time: 604800   # 1 week
 server:
   port: 8081
 logging:

@@ -28,9 +28,23 @@ public class JwtServiceImpl implements JwtService {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    @Value("${security.jwt.refresh-expiration-time}")
+    private long jwtRefreshExpiration;
+
     @Override
     public String generateToken(UserDetails userDetails) {
         return generateTokenAgain(userDetails);
+    }
+
+    @Override
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + jwtRefreshExpiration))
+                .signWith(getSignInKey())
+                .compact();
     }
 
 //    @Override
