@@ -28,7 +28,7 @@ import javax.crypto.spec.SecretKeySpec;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final String[] WHITELIST = {
+    private final String[] AUTHORIZED_ENDPOINTS = {
             "/api/v1/demo/users/**",
             "/auth/token",
             "/auth/introspect"
@@ -49,7 +49,7 @@ public class SecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable)
                     .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
                     .authorizeHttpRequests(request ->
-                            request.requestMatchers(WHITELIST).authenticated()
+                            request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
                                     .anyRequest().permitAll());
 //                .formLogin(Customizer.withDefaults());
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));

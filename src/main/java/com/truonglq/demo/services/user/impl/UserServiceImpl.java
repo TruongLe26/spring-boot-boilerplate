@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
-    AuthenticationService authenticationService;
+//    AuthenticationService authenticationService;
 
     @Override
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -45,6 +46,7 @@ public class UserServiceImpl implements UserService {
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setStatus(true);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getCurrentUser() {
-        User user = (User) authenticationService.getAuthentication().getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userMapper.toUserResponse(user);
     }
 
@@ -70,14 +72,11 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
-//        if (user == null) {
-//            throw new UsernameNotFoundException("User not found");
-//        }
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                List.of()
-        );
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(),
+//                user.getPassword(),
+//                List.of()
+//        );
+        return (UserDetails) user;
     }
 }

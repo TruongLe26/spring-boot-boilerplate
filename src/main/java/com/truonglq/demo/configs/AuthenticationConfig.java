@@ -23,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthenticationConfig {
 
     PasswordEncoder passwordEncoder;
-    UserRepository userRepository;
+//    UserRepository userRepository;
     UserService userService;
 
 //    @Bean

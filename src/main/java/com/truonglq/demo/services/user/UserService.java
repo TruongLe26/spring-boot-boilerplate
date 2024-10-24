@@ -13,6 +13,5 @@ public interface UserService extends UserDetailsService {
     UserResponse createUser(UserRegistrationRequest request);
     List<User> getUsers();
     Page<User> getUsersByUsername(String username, int page, int size);
-
     UserResponse getCurrentUser();
 }
