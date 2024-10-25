@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,10 +17,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+//import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+//import org.springframework.security.oauth2.jwt.JwtDecoder;
+//import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -36,7 +40,8 @@ public class SecurityConfig {
     };
 
     private final String[] ADMIN_ENDPOINTS = {
-            "/admin/**"
+            "/admin",
+            "/admin/users/**"
     };
 
     @Value("${security.jwt.signer-key}")
@@ -56,7 +61,7 @@ public class SecurityConfig {
                     .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
                     .authorizeHttpRequests(request ->
                             request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
-                                    .requestMatchers(ADMIN_ENDPOINTS).hasRole("ADMIN")
+                                    .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
                                     .anyRequest().permitAll())
                     .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 //                .formLogin(Customizer.withDefaults());
@@ -66,6 +71,13 @@ public class SecurityConfig {
             log.error("Error occurred while configuring security filter chain: {}", e.getMessage());
         }
         return null;
+    }
+
+    @Bean
+    static RoleHierarchy roleHierarchy() {
+        return RoleHierarchyImpl.withDefaultRolePrefix()
+                .role("ADMIN").implies("USER")
+                .build();
     }
 
 //    @Bean

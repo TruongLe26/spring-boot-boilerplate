@@ -19,10 +19,13 @@ spring:
 security:
   jwt:
     signer-key: ${SECRET_KEY}
-    expiration-time: 900              # 15 minutes
+    expiration-time: 9000000              # 15 minutes
     refresh-expiration-time: 604800   # 1 week
 server:
   port: 8081
 logging:
   level:
     root: info
+    org:
+      springframework:
+        security: TRACE
