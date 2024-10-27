@@ -50,7 +50,8 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
         User admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("123456"))
-                .roles(new HashSet<>(List.of(adminRole)))
+                .authorities(new HashSet<>(List.of(adminRole)))
+//                .roles(new HashSet<>(List.of(adminRole)))
                 .build();
         userRepository.save(admin);
     }
