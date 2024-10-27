@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     AuthenticationManager authenticationManager;
-//    UserRepository userRepository;
     JwtService jwtService;
 
     @Bean
@@ -39,8 +38,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return buildLoginResponse(authenticatedUser);
     }
 
-    // Not using role for now
-    // Changed to UserDetails as return type for generating token
     private UserDetails authenticate(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

@@ -22,6 +22,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -46,31 +47,24 @@ public class SecurityConfig {
 
     @Value("${security.jwt.signer-key}")
     private String signerKey;
-    private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        try {
-            httpSecurity
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authenticationProvider(authenticationProvider)
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
-                    .authorizeHttpRequests(request ->
-                            request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
-                                    .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
-                                    .anyRequest().permitAll())
-                    .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+        httpSecurity
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
+                                .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
+                                .anyRequest().permitAll())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 //                .formLogin(Customizer.withDefaults());
 //                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(jwtDecoder())));
-            return httpSecurity.build();
-        } catch (Exception e) {
-            log.error("Error occurred while configuring security filter chain: {}", e.getMessage());
-        }
-        return null;
+        return httpSecurity.build();
     }
 
     @Bean

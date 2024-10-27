@@ -2,6 +2,7 @@ package com.truonglq.demo.controllers;
 
 import com.truonglq.demo.dtos.requests.UserRegistrationRequest;
 import com.truonglq.demo.dtos.responses.ApiResponse;
+import com.truonglq.demo.dtos.responses.StandardApiResponse;
 import com.truonglq.demo.dtos.responses.UserResponse;
 import com.truonglq.demo.models.entities.User;
 import com.truonglq.demo.services.user.UserService;
@@ -10,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,10 +50,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    ApiResponse<UserResponse> getCurrentUser() {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.getCurrentUser())
-                .build();
+    @ResponseStatus(HttpStatus.OK)
+    StandardApiResponse<UserResponse> getCurrentUser() {
+        return StandardApiResponse.success(userService.getCurrentUser(), "User information retrieved.");
     }
 
 }

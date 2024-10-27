@@ -4,6 +4,7 @@ import com.truonglq.demo.dtos.requests.UserRegistrationRequest;
 import com.truonglq.demo.dtos.responses.UserResponse;
 import com.truonglq.demo.exceptions.AppException;
 import com.truonglq.demo.exceptions.ErrorCode;
+import com.truonglq.demo.exceptions.UserAlreadyExistsException;
 import com.truonglq.demo.mappers.UserMapper;
 import com.truonglq.demo.models.entities.User;
 import com.truonglq.demo.repositories.UserRepository;
@@ -29,7 +30,8 @@ public class RegistrationServiceImpl implements RegistrationService {
         Optional<User> existingUserWithUsername = userRepository.findByUsername(request.getUsername());
 
         if (existingUserWithUsername.isPresent()) {
-            throw new AppException(ErrorCode.USER_EXISTED);
+//            throw new AppException(ErrorCode.USER_EXISTED);
+            throw new UserAlreadyExistsException();
         }
 
         User user = User.builder()
