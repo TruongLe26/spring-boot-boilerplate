@@ -60,10 +60,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
                 .authorizeHttpRequests(request ->
-                        request.anyRequest().access(roleBasedVoter))
-//                        request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
-//                                .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
-//                                .anyRequest().permitAll())
+//                        request.anyRequest().access(roleBasedVoter))
+                        request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
+                                .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
+                                .anyRequest().permitAll())
 //                                .anyRequest().access((AuthorizationManager) customAuthorizationManager))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 //                .formLogin(Customizer.withDefaults());
