@@ -31,4 +31,16 @@ public class MessageController {
         return StandardApiResponse.success(kafkaService.getMessages(), "Done!");
     }
 
+    @GetMapping("/sendSpecialMessage")
+    @ResponseStatus(HttpStatus.OK)
+    StandardApiResponse<String> sendSpecialMessage() {
+        return StandardApiResponse.success(kafkaService.sendMessageToPartition("Special message to partition 1", 1), "Message sent!");
+    }
+
+    @GetMapping("/getSpecialMessage")
+    @ResponseStatus(HttpStatus.OK)
+    StandardApiResponse<List<String>> getSpecialMessage() {
+        return StandardApiResponse.success(kafkaService.getMessages(), "List of special messages!");
+    }
+
 }
