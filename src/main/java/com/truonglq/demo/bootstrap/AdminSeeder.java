@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@DependsOn("roleSeeder")
+//@DependsOn("roleSeeder")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -45,14 +45,13 @@ public class AdminSeeder implements ApplicationListener<ContextRefreshedEvent> {
 //        Optional<Role> optionalAdminRole = roleRepository.findByName(RoleEnum.ADMIN);
 //        if (optionalAdminRole.isEmpty()) return;
         Role adminRole = roleRepository.findByName(RoleEnum.ADMIN)
-                .orElseThrow(() -> new AppException(ErrorCode.UNCATEGORIZED_EXCEPTION));
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         User admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder.encode("123456"))
-                .authorities(new HashSet<>(List.of(adminRole)))
-//                .roles(new HashSet<>(List.of(adminRole)))
                 .build();
+        admin.addRole(adminRole);
         userRepository.save(admin);
     }
 }

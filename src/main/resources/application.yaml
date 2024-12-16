@@ -5,10 +5,9 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:mysql://localhost:6033/demo?allowPublicKeyRetrieval=true
-    username: ${USERNAME:user}
-    password: ${PASSWORD:password}
-#    url: jdbc:mysql://${URL:localhost}:6033/demo?allowPublicKeyRetrieval=true
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:6033}/${DB_NAME:demo}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -16,11 +15,15 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+        format_sql: true
+        hbm2ddl:
+          auto: none
 security:
   jwt:
     signer-key: ${SECRET_KEY}
-    expiration-time: 604800
-    refresh-expiration-time: 9000000
+    expiration-time: 900000           # 15 minutes
+    refresh-expiration-time: 604800000   # 1 week
 server:
   port: 8081
 logging:
@@ -29,5 +32,3 @@ logging:
     org:
       springframework:
         security: TRACE
-      hibernate:
-        SQL: debug

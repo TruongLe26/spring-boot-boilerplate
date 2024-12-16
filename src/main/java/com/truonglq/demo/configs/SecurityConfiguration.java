@@ -5,7 +5,6 @@ import com.truonglq.demo.security.RoleBasedVoter;
 import com.truonglq.demo.services.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -20,19 +19,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 //import org.springframework.security.oauth2.jwt.JwtDecoder;
 //import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import javax.crypto.spec.SecretKeySpec;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     private final String[] AUTHORIZED_ENDPOINTS = {
             "/api/v1/demo/users/**",
@@ -45,7 +38,7 @@ public class SecurityConfig {
             "/admin/users/**"
     };
 
-//    @Value("${security.jwt.signer-key}")
+    //    @Value("${security.jwt.signer-key}")
 //    private String signerKey;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -60,10 +53,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)) // for using H2 console
                 .authorizeHttpRequests(request ->
-//                        request.anyRequest().access(roleBasedVoter))
-                        request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
-                                .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
-                                .anyRequest().permitAll())
+                        request.anyRequest().access(roleBasedVoter))
+//                        request.requestMatchers(AUTHORIZED_ENDPOINTS).authenticated()
+//                                .requestMatchers(ADMIN_ENDPOINTS).hasAnyRole("ADMIN")
+//                                .anyRequest().permitAll())
 //                                .anyRequest().access((AuthorizationManager) customAuthorizationManager))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 //                .formLogin(Customizer.withDefaults());

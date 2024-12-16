@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class AuthenticationConfig {
+public class AuthenticationConfiguration {
 
     PasswordEncoder passwordEncoder;
     UserService userService;

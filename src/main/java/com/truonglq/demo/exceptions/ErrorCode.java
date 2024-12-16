@@ -12,6 +12,7 @@ public enum ErrorCode {
     USERNAME_INVALID(1003, "Username must be at least 3 characters"),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters"),
     USER_NOT_EXISTED(1005, "User not existed"),
+    ROLE_NOT_FOUND(1006, "Role not found"),
     UNAUTHENTICATED(401, "Invalid username or password"),
     UNAUTHORIZED(403, "Access is denied")
     ;

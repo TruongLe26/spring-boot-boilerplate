@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -25,6 +27,11 @@ public class AdminServiceImpl implements AdminService {
     PasswordEncoder passwordEncoder;
 
     @Override
+    public List<User> fetchNextPage(long id, int limit) {
+        return userRepository.fetchAll(id, limit);
+    }
+
+    @Override
     @Transactional
     public UserUpdatingResponse updateUser(String id, UserUpdatingRequest request) {
         User user = userRepository.findById(id)
@@ -33,6 +40,6 @@ public class AdminServiceImpl implements AdminService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return userMapper.toUserUpdatingResponse(userRepository.save(user));
+        return userMapper.toUserUpdatingResponse(user);
     }
 }
