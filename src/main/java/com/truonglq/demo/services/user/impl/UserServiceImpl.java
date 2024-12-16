@@ -7,7 +7,6 @@ import com.truonglq.demo.exceptions.AppException;
 import com.truonglq.demo.exceptions.ErrorCode;
 import com.truonglq.demo.mappers.UserMapper;
 import com.truonglq.demo.repositories.UserRepository;
-import com.truonglq.demo.services.authentication.AuthenticationService;
 import com.truonglq.demo.services.user.UserService;
 import com.truonglq.demo.services.user.UserSpecifications;
 import lombok.AccessLevel;
@@ -26,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
-//    AuthenticationService authenticationService;
 
     @Override
     public UserResponse createUser(UserRegistrationRequest request) {
@@ -65,6 +64,17 @@ public class UserServiceImpl implements UserService {
     public UserResponse getCurrentUser() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
+    }
+
+    @Override
+    public void saveNewUser(User user) {
+        userRepository.save(user);
     }
 
     @Override

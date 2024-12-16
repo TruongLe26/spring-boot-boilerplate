@@ -12,6 +12,8 @@ import com.truonglq.demo.models.enums.RoleEnum;
 import com.truonglq.demo.repositories.RoleRepository;
 import com.truonglq.demo.repositories.UserRepository;
 import com.truonglq.demo.services.registration.RegistrationService;
+import com.truonglq.demo.services.role.RoleService;
+import com.truonglq.demo.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,16 +26,14 @@ import java.util.Optional;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
 public class RegistrationServiceImpl implements RegistrationService {
 
-    UserRepository userRepository;
-    RoleRepository roleRepository;
+    UserService userService;
+    RoleService roleService;
     PasswordEncoder passwordEncoder;
     UserMapper userMapper;
 
     @Override
     public UserResponse registerNewLockedUser(UserRegistrationRequest request) {
-        Optional<User> existingUserWithUsername = userRepository.findByUsername(request.getUsername());
-
-        if (existingUserWithUsername.isPresent()) {
+        if (userService.existsByUsername(request.getUsername())) {
 //            throw new AppException(ErrorCode.USER_EXISTED);
             throw new UserAlreadyExistsException();
         }
@@ -46,10 +46,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         // Send OTP
 
-        Role userRole = roleRepository.findByName(RoleEnum.USER)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Role userRole = roleService.findByName(RoleEnum.USER);
         user.addRole(userRole);
-        userRepository.save(user);
+        userService.saveNewUser(user);
 
         return userMapper.toUserResponse(user);
     }

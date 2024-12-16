@@ -14,4 +14,6 @@ public interface UserService extends UserDetailsService {
     List<User> getUsers();
     Page<User> getUsersByUsername(String username, int page, int size);
     UserResponse getCurrentUser();
+    boolean existsByUsername(String username);
+    void saveNewUser(User user);
 }
